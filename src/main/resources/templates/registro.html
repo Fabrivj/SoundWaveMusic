@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro</title>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+
+<form action="/usuarios/registro" method="post" th:object="${usuario}">
+  <label for="nombreUsuario">Nombre:</label>
+  <input type="text" id="nombreUsuario" th:field="*{nombreUsuario}" required="required" /><br><br>
+
+  <label for="correo">Correo:</label>
+  <input type="email" id="correo" th:field="*{correo}" required="required" /><br><br>
+
+  <label for="contrasena">Contraseña:</label>
+  <input type="password" id="contrasena" th:field="*{contrasena}" required="required" /><br><br>
+
+  <button type="submit">Registrar</button>
+</form>
+
+<!-- Alerta de SweetAlert -->
+<script th:inline="javascript">
+  /*<![CDATA[*/
+  var mensaje = /*[[${mensaje}]]*/ 'null';
+  var tipoAlerta = /*[[${tipoAlerta}]]*/ 'null';
+
+  if (mensaje != 'null' && tipoAlerta != 'null') {
+    if (tipoAlerta === 'success') {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Éxito!',
+        text: mensaje,
+        confirmButtonText: 'Aceptar'
+      });
+    } else if (tipoAlerta === 'error') {
+      Swal.fire({
+        icon: 'error',
+        title: '¡Error!',
+        text: mensaje,
+        confirmButtonText: 'Intentar nuevamente'
+      });
+    }
+  }
+  /*]]>*/
+</script>
+
+</body>
+</html>

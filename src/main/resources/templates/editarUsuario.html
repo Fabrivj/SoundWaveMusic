@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Usuario</title>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+
+</head>
+<body>
+<h1>Editar Usuario</h1>
+
+<!-- Barra de búsqueda -->
+<form action="/usuarios/buscar" method="post">
+    <label for="correoSearch">Buscar usuario por correo:</label>
+    <input type="email" id="correoSearch" name="correo" required>
+    <button type="submit">Buscar</button>
+</form>
+
+<div th:if="${usuario}">
+    <!-- Formulario de edición -->
+    <form action="/usuarios/actualizar" method="post">
+        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+
+        <label for="nombreUsuario">Nombre:</label>
+        <input type="text" id="nombreUsuario" name="nombreUsuario" th:value="${usuario.nombreUsuario}" required>
+
+        <label for="correo">Correo:</label>
+        <input disabled type="email" id="correo" name="correo" th:value="${usuario.correo}" required>
+
+        <label for="rol">Rol:</label>
+        <select id="rol" name="rol">
+            <option value="ADMIN" th:selected="${usuario.rol == 'ADMIN'}">Admin</option>
+            <option value="USER" th:selected="${usuario.rol == 'USER'}">Usuario</option>
+        </select>
+
+        <button type="submit">Guardar cambios</button>
+    </form>
+
+    <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">
+        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+    </form>
+
+    <button id="btnEliminar" data-id="${usuario.idUsuario}" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Usuario</button>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+    var mensaje = /*[[${mensaje}]]*/ 'null';
+    var tipoAlerta = /*[[${tipoAlerta}]]*/ 'null';
+
+    if (mensaje && mensaje !== 'null' && tipoAlerta && tipoAlerta !== 'null') {
+        Swal.fire({
+            icon: tipoAlerta,
+            title: tipoAlerta === 'success' ? '¡Éxito!' : '¡Error!',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+        });
+    }
+
+    function confirmarEliminacion() {
+        Swal.fire({
+            title: "¿Estás seguro?",
+            text: "No podrás revertir esto",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Sí, eliminar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('eliminarForm').submit(); // Enviar el formulario si se confirma
+            }
+        });
+    }
+    /*]]>*/
+</script>
+</body>
+</html>
