@@ -1,5 +1,6 @@
 package com.cenfotec.soundwavemusic.controllers;
 import com.cenfotec.soundwavemusic.models.Producto;
+import com.cenfotec.soundwavemusic.services.CategoriaService;
 import com.cenfotec.soundwavemusic.services.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,9 +17,13 @@ public class ProductoController {
     @Autowired
     private ProductoService productoService;
 
+    @Autowired
+    private CategoriaService categoriaService;
+
     @GetMapping("/registrar")
     public String mostrarFormularioRegistro(Model model) {
         model.addAttribute("producto", new Producto());
+        model.addAttribute("categorias", categoriaService.obtenerTodas());
         return "producto";
     }
 
@@ -33,13 +38,18 @@ public class ProductoController {
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
         try {
-            productoService.saveProducto(producto);
-            redirectAttributes.addFlashAttribute("mensaje", "Producto guardado con éxito.");
+            productoService.saveProducto(producto); // Guarda el producto
+            int idProducto = producto.getId(); // Obtiene el ID generado
+
+            redirectAttributes.addFlashAttribute("mensaje", "Producto guardado con éxito. Ahora registre el inventario.");
             redirectAttributes.addFlashAttribute("tipoAlerta", "success");
+
+            return "redirect:/inventario/registrar?idProducto=" + idProducto;
+
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensaje", "Error al guardar el producto.");
             redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/productos/registrar";
         }
-        return "redirect:/productos/registrar";
     }
 }

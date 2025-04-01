@@ -6,12 +6,13 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "usuarios")
 public class Usuario {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
-    private Long idUsuario;
+    private Long id;
 
     @Column(name = "nombre_usuario", nullable = false)
     private String nombreUsuario;
@@ -108,10 +109,10 @@ public class Usuario {
     }
 
     public Long getIdUsuario() {
-        return idUsuario;
+        return id;
     }
 
     public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
+        this.id = id;
     }
 }

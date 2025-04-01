@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Registrar Inventario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Registrar Inventario</h2>
+
+    <form action="/inventario/guardar" method="post" th:object="${inventario}">
+        <!-- Producto asociado (oculto) -->
+        <input type="hidden" th:field="*{producto.id}" />
+
+
+        <div class="mb-3">
+            <label th:for="*{cantidadDisponible}">Cantidad Disponible</label>
+            <input type="number" class="form-control" th:field="*{cantidadDisponible}" required />
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" class="form-check-input" th:field="*{estado}" />
+            <label th:for="*{estado}">Activo</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Guardar Inventario</button>
+    </form>
+</div>
+</body>
+</html>

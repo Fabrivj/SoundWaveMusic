@@ -14,6 +14,11 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
+    public Usuario obtenerPorId(long id) {
+        return usuarioRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+    }
+
     public boolean registrarUsuario(Usuario usuario) {
         if (usuarioRepository.existsByCorreo(usuario.getCorreo())) {
             return false;

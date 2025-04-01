@@ -20,4 +20,11 @@ public class ProductoService {
     public void saveProducto(Producto producto) {
         productoRepository.save(producto);
     }
+
+
+    public Producto findById(int id) {
+        return productoRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+    }
+
 }
