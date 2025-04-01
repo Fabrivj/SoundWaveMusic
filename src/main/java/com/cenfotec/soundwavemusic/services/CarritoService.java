@@ -25,7 +25,7 @@ public class CarritoService {
     private InventarioService inventarioService;
 
     public Carrito obtenerOCrearCarritoActivo(Usuario usuario) {
-        return carritoRepository.findByUsuarioIdAndEstadoTrue(usuario.getIdUsuario())
+        return carritoRepository.findByUsuarioIdAndEstadoTrue(usuario.getId())
                 .orElseGet(() -> {
                     Carrito nuevo = new Carrito();
                     nuevo.setUsuario(usuario);

@@ -26,7 +26,7 @@ public class UsuarioService {
 
         Usuario usuarioGuardado = usuarioRepository.save(usuario);
 
-        if (usuarioGuardado != null && usuarioGuardado.getIdUsuario() != null) {
+        if (usuarioGuardado != null && usuarioGuardado.getId() != null) {
 
             usuarioRepository.findAll().forEach(System.out::println);
             return true;
@@ -54,7 +54,7 @@ public class UsuarioService {
     }
 
     public boolean actualizarUsuario(Usuario usuario) {
-        Optional<Usuario> usuarioExistente = usuarioRepository.findById(usuario.getIdUsuario());
+        Optional<Usuario> usuarioExistente = usuarioRepository.findById(usuario.getId());
         if (usuarioExistente.isPresent()) {
             Usuario usuarioActualizado = usuarioExistente.get();
             usuarioActualizado.setNombreUsuario(usuario.getNombreUsuario());

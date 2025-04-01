@@ -108,11 +108,11 @@ public class Usuario {
         this.fechaRegistro = fechaRegistro;
     }
 
-    public Long getIdUsuario() {
+    public Long getId() {
         return id;
     }
 
-    public void setIdUsuario(Long idUsuario) {
+    public void setId(Long idUsuario) {
         this.id = id;
     }
 }
