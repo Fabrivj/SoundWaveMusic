@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Productos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Ensure all images are the same size */
+        .card-img-top {
+            height: 400px; /* Set a fixed height */
+            object-fit: contain; /* Ensure the image covers the area without distortion */
+            width: 100%; /* Make sure the image takes up the full width of the container */
+        }
+
+        /* Optional: You can add this to ensure the cards remain consistent in size */
+        .card {
+            height: 100%; /* Ensure the card stays the same size even if the image changes */
+        }
+    </style>
+</head>
+<body>
+<div class="container mt-5">
+    <h2>Lista de Productos</h2>
+    <div class="row">
+        <div class="col-md-4" th:each="producto : ${productos}">
+            <div class="card">
+                <!-- Dynamically load the image from the 'imagen' field -->
+                <img th:src="${producto.imagen}" class="card-img-top" alt="Imagen del Producto"
+                     onerror="this.onerror=null; this.src='https://images.ctfassets.net/m8onsx4mm13s/6byKXi38tiAfgOYvMhpgu4/ddf665e68eb437e6f5083c917ae4d5b2/LPR59GRNYMLNH1_front.png?w=1200&h=1200';">
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${producto.nombre_producto}"></h5>
+                    <p class="card-text" th:text="${producto.descripcion}"></p>
+                    <p class="card-text"><strong>Precio: </strong>₡<span th:text="${producto.precio}"></span></p>
+                    <!-- Add to Cart Button with dynamic modal target -->
+                    <button class="btn btn-success" data-bs-toggle="modal"
+                            data-bs-target="#addToCartModal-${producto.id_producto}"
+                            data-product-id="${producto.id}"
+                            data-product-name="${producto.nombre_producto}"
+                            data-product-price="${producto.precio}">
+                        Agregar al Carrito
+                    </button>
+                </div>
+            </div>
+
+            <!-- Add to Cart Modal (Dynamically Generated) -->
+            <div class="modal fade" id="addToCartModal-${producto.id_producto}" tabindex="-1" aria-labelledby="addToCartModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addToCartModalLabel">Agregar al Carrito</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>¿Cuántos de este producto deseas agregar?</p>
+                            <div class="input-group">
+                                <button class="btn btn-outline-secondary" type="button" id="decrementButton-${producto.id}">-</button>
+                                <input type="number" class="form-control" id="quantityInput-${producto.id}" value="1" min="1">
+                                <button class="btn btn-outline-secondary" type="button" id="incrementButton-${producto.id}">+</button>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" id="addToCartButton-${producto.id}">Agregar al Carrito</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <a href="/productos/registrar" class="btn btn-secondary mt-3">Registrar Nuevo Producto</a>
+</div>
+
+<!-- Add JavaScript for handling the modal and cart -->
+<script>
+    // Cart Object (for simplicity, you can eventually store this in a backend or session)
+    let cart = [];
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // Loop through each product's "Add to Cart" button
+        const addToCartButtons = document.querySelectorAll('[id^="addToCartButton-"]');
+
+        addToCartButtons.forEach(button => {
+            const productId = button.getAttribute('data-product-id');
+            const productName = button.getAttribute('data-product-name');
+            const productPrice = button.getAttribute('data-product-price');
+
+            // Add event listener for each button
+            button.addEventListener('click', function() {
+                const quantity = parseInt(document.getElementById(`quantityInput-${productId}`).value);
+
+                // Add product to cart (if already added, update quantity)
+                let existingProduct = cart.find(item => item.id == productId);
+                if (existingProduct) {
+                    existingProduct.quantity += quantity;
+                } else {
+                    cart.push({id: productId, name: productName, price: productPrice, quantity: quantity});
+                }
+
+                console.log(cart);  // For testing, you can see the cart in the console
+
+                // Optionally, close the modal (using bootstrap modal's API)
+                const modal = new bootstrap.Modal(document.getElementById(`addToCartModal-${productId}`));
+                modal.hide();
+            });
+        });
+    });
+
+    // Increment and Decrement functionality for quantity
+    document.addEventListener('click', function(event) {
+        if (event.target && event.target.id.startsWith('incrementButton-')) {
+            const productId = event.target.id.split('-')[1];
+            const quantityInput = document.getElementById(`quantityInput-${productId}`);
+            quantityInput.value = parseInt(quantityInput.value) + 1;
+        }
+
+        if (event.target && event.target.id.startsWith('decrementButton-')) {
+            const productId = event.target.id.split('-')[1];
+            const quantityInput = document.getElementById(`quantityInput-${productId}`);
+            if (parseInt(quantityInput.value) > 1) {
+                quantityInput.value = parseInt(quantityInput.value) - 1;
+            }
+        }
+    });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

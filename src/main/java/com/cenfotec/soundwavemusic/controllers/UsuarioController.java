@@ -1,4 +1,5 @@
 package com.cenfotec.soundwavemusic.controllers;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cenfotec.soundwavemusic.models.Usuario;
 import com.cenfotec.soundwavemusic.services.UsuarioService;
@@ -23,17 +24,24 @@ public class UsuarioController {
     }
 
     @PostMapping("/registro")
-    public String registrarUsuario(@ModelAttribute Usuario usuario, Model model) {
+    public String registrarUsuario(@ModelAttribute Usuario usuario, RedirectAttributes redirectAttributes) {
         boolean exito = usuarioService.registrarUsuario(usuario);
 
         if (exito) {
-            model.addAttribute("mensaje", "Usuario registrado con éxito.");
-            model.addAttribute("tipoAlerta", "success");
+            // Successful registration
+            redirectAttributes.addFlashAttribute("mensaje", "Usuario registrado con éxito.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
+
+            // Redirect to the login page
+            return "redirect:/usuarios/login";
         } else {
-            model.addAttribute("mensaje", "Hubo un error al registrar el usuario. Inténtalo nuevamente.");
-            model.addAttribute("tipoAlerta", "error");
+            // Failed registration
+            redirectAttributes.addFlashAttribute("mensaje", "Hubo un error al registrar el usuario. Inténtalo nuevamente.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+
+            // Stay on the registration page
+            return "redirect:/usuarios/registro";
         }
-        return "registro";
     }
 
     @GetMapping("/login")
@@ -43,18 +51,22 @@ public class UsuarioController {
 
     // Procesar el login
     @PostMapping("/login")
-    public String autenticarUsuario(@RequestParam String correo, @RequestParam String contrasena, Model model) {
+    public String autenticarUsuario(@RequestParam String correo, @RequestParam String contrasena, RedirectAttributes redirectAttributes) {
+        // Authenticate the user
         Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
 
         if (usuario != null) {
-            model.addAttribute("mensaje", "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
-            model.addAttribute("tipoAlerta", "success");
+            // Successful login
+            redirectAttributes.addFlashAttribute("mensaje", "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
 
-            return "catalogo";
+            // Redirect to product catalog
+            return "redirect:/productos/listar";  // Assuming this URL maps to your product list page
         } else {
-            model.addAttribute("mensaje", "Credenciales incorrectas.");
-            model.addAttribute("tipoAlerta", "error");
-            return "login";
+            // Failed login
+            redirectAttributes.addFlashAttribute("mensaje", "Credenciales incorrectas.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/usuarios/login";  // Stay on the login page
         }
     }
 
