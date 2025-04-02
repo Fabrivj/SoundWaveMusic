@@ -81,7 +81,7 @@ public class CarritoController {
             redirectAttributes.addFlashAttribute("mensaje", "Compra finalizada con éxito.");
             redirectAttributes.addFlashAttribute("tipoAlerta", "success");
 
-            return "redirect:/factura/ver/" + idFactura; // ✅ Redirige al detalle
+            return "redirect:/factura/ver/" + idFactura;
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
             redirectAttributes.addFlashAttribute("tipoAlerta", "error");
