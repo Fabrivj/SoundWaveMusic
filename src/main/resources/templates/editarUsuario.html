@@ -21,7 +21,7 @@
 <div th:if="${usuario}">
     <!-- Formulario de edición -->
     <form action="/usuarios/actualizar" method="post">
-        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+        <input type="hidden" name="idUsuario" th:value="${usuario.id}">
 
         <label for="nombreUsuario">Nombre:</label>
         <input type="text" id="nombreUsuario" name="nombreUsuario" th:value="${usuario.nombreUsuario}" required>
@@ -39,7 +39,7 @@
     </form>
 
     <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">
-        <input type="hidden" name="idUsuario" th:value="${usuario.idUsuario}">
+        <input type="hidden" name="idUsuario" th:value="${usuario.id}">
     </form>
 
     <button id="btnEliminar" data-id="${usuario.idUsuario}" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Usuario</button>
