@@ -34,6 +34,46 @@ public class ProductoController {
         return "listarProductos"; // T Thymeleaf template
     }
 
+    // Editar Producto
+
+    @GetMapping("/editar/{id}")
+    public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
+        Producto producto = productoService.findById(id);  // Fetch the product by its ID
+        model.addAttribute("producto", producto);  // Pass the product to the view
+        model.addAttribute("categorias", categoriaService.obtenerTodas());  // Pass the categories
+        return "editarProducto"; // This should match the name of the HTML template (editarProducto.html)
+    }
+
+
+    @PostMapping("/actualizar")
+    public String actualizarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
+        try {
+            productoService.saveProducto(producto);  // Save the updated product
+            redirectAttributes.addFlashAttribute("mensaje", "Producto actualizado con éxito.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
+            return "redirect:/productos/listar"; // Redirect to the product listing page
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al actualizar el producto.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/productos/editar/" + producto.getId(); // In case of error, go back to the edit page
+        }
+    }
+
+
+    @PostMapping("/eliminar")
+    public String eliminarProducto(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
+        try {
+            productoService.deleteProducto(id);  // Call service method to delete the product
+            redirectAttributes.addFlashAttribute("mensaje", "Producto eliminado con éxito.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
+            return "redirect:/productos/listar"; // Redirect to the product listing page after deletion
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", "Error al eliminar el producto.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/productos/listar"; // Redirect back to the listing page if error occurs
+        }
+    }
+
 
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {

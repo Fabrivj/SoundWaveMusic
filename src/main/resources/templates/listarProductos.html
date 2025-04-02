@@ -42,6 +42,11 @@
                             th:attr="data-bs-target='#addToCartModal-' + ${producto.id}">
                         Agregar al Carrito
                     </button>
+
+                    <!-- Edit Button -->
+                    <a th:href="@{/productos/editar/{id}(id=${producto.id})}" class="btn btn-warning mt-2">
+                        Editar Producto
+                    </a>
                 </div>
             </div>
 

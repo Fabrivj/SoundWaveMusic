@@ -27,4 +27,10 @@ public class ProductoService {
                 .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
     }
 
+    public void deleteProducto(Long id) {
+        // Find the product by id and delete it
+        Producto producto = productoRepository.findById(Math.toIntExact(id)).orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        productoRepository.delete(producto);
+    }
+
 }
