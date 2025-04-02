@@ -3,6 +3,7 @@ package com.cenfotec.soundwavemusic.controllers;
 
 import com.cenfotec.soundwavemusic.models.*;
 import com.cenfotec.soundwavemusic.services.CarritoService;
+import com.cenfotec.soundwavemusic.services.PedidoService;
 import org.springframework.ui.Model;
 import com.cenfotec.soundwavemusic.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class CarritoController {
 
     @Autowired
     private UsuarioService usuarioService;
+
+    @Autowired
+    private PedidoService pedidoService;
 
     @GetMapping("/ver")
     public String verCarrito(@RequestParam("idUsuario") long idUsuario, Model model) {
@@ -65,6 +69,24 @@ public class CarritoController {
         redirectAttributes.addFlashAttribute("mensaje", "Producto eliminado del carrito");
         redirectAttributes.addFlashAttribute("tipoAlerta", "success");
         return "redirect:/carrito/ver?idUsuario=" + idUsuario;
+    }
+
+    @PostMapping("/finalizar")
+    public String finalizarCompra(@RequestParam int idUsuario,
+                                  @RequestParam String direccionEnvio,
+                                  RedirectAttributes redirectAttributes) {
+        try {
+            int idFactura = pedidoService.generarPedidoDesdeCarrito(idUsuario, direccionEnvio);
+
+            redirectAttributes.addFlashAttribute("mensaje", "Compra finalizada con éxito.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
+
+            return "redirect:/factura/ver/" + idFactura;
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensaje", e.getMessage());
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/productos/listar";
+        }
     }
 
 }
