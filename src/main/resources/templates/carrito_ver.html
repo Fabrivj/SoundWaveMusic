@@ -39,8 +39,19 @@
         </tfoot>
     </table>
 
-    <a th:href="@{/productos/listar}" class="btn btn-secondary">Seguir comprando</a>
-    <a th:href="@{/carrito/finalizar(idUsuario=${carrito.usuario.id})}" class="btn btn-success">Finalizar Compra</a>
+    <!-- Formulario para finalizar la compra con dirección -->
+    <form th:action="@{/carrito/finalizar}" method="post" class="mt-4">
+        <input type="hidden" name="idUsuario" th:value="${carrito.usuario.id}" />
+
+        <div class="mb-3">
+            <label for="direccionEnvio" class="form-label">Dirección de envío</label>
+            <input type="text" class="form-control" id="direccionEnvio" name="direccionEnvio" required />
+        </div>
+
+        <button type="submit" class="btn btn-success">Finalizar Compra</button>
+    </form>
+
+    <a th:href="@{/productos/listar}" class="btn btn-secondary mt-3">Seguir comprando</a>
 </div>
 </body>
 </html>

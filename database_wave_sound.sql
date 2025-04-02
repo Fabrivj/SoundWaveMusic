@@ -54,10 +54,11 @@ CREATE TABLE Inventarios (
 
 CREATE TABLE Pedidos (
     id_pedido INT PRIMARY KEY AUTO_INCREMENT,
-    id_usuario INT,
+    id_usuario BIGINT,
     fecha_pedido DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado VARCHAR(50),
-    total DECIMAL(10,2),
+    estado BOOLEAN,
+    direccion_envio VARCHAR(5000)
+    total DOUBLE,
     FOREIGN KEY (id_usuario) REFERENCES Usuarios(id_usuario)
 );
 
@@ -76,8 +77,8 @@ CREATE TABLE Facturas (
     id_factura INT PRIMARY KEY AUTO_INCREMENT,
     id_pedido INT,
     fecha_emision DATETIME DEFAULT CURRENT_TIMESTAMP,
-    monto_total VARCHAR(255),
-    impuesto VARCHAR(255),
+    monto_total DOUBLE,
+    impuesto DOUBLE,
     FOREIGN KEY (id_pedido) REFERENCES Pedidos(id_pedido)
 );
 
