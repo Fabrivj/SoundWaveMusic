@@ -40,7 +40,7 @@
     </table>
 
     <!-- Formulario para finalizar la compra con dirección -->
-    <form th:action="@{/carrito/finalizar}" method="post" class="mt-4">
+    <form id="formFinalizarCompra" th:action="@{/carrito/finalizar}" method="post" class="mt-4">
         <input type="hidden" name="idUsuario" th:value="${carrito.usuario.id}" />
 
         <div class="mb-3">
@@ -48,10 +48,30 @@
             <input type="text" class="form-control" id="direccionEnvio" name="direccionEnvio" required />
         </div>
 
-        <button type="submit" class="btn btn-success">Finalizar Compra</button>
+        <button type="button" class="btn btn-success" onclick="confirmarCompra()">Finalizar Compra</button>
     </form>
 
     <a th:href="@{/productos/listar}" class="btn btn-secondary mt-3">Seguir comprando</a>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function confirmarCompra() {
+        Swal.fire({
+            title: '¿Deseas finalizar tu compra?',
+            text: 'Esta acción no se puede deshacer.',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sí, finalizar',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById('formFinalizarCompra').submit();
+            }
+        });
+    }
+</script>
 </body>
 </html>

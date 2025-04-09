@@ -1,11 +1,6 @@
 package com.cenfotec.soundwavemusic.services;
 
-import com.cenfotec.soundwavemusic.models.Carrito;
-import com.cenfotec.soundwavemusic.models.CarritoProducto;
-import com.cenfotec.soundwavemusic.models.Pedido;
-import com.cenfotec.soundwavemusic.models.Usuario;
-import com.cenfotec.soundwavemusic.models.PedidoDetalle;
-import com.cenfotec.soundwavemusic.models.Factura;
+import com.cenfotec.soundwavemusic.models.*;
 import com.cenfotec.soundwavemusic.repos.*;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +29,9 @@ public class PedidoService {
 
     @Autowired
     private CarritoProductoRepository carritoProductoRepository;
+
+    @Autowired
+    private InventarioRepository inventarioRepository;
 
     @Transactional
     public int  generarPedidoDesdeCarrito(int idUsuario, String direccionEnvio) {
@@ -69,6 +67,22 @@ public class PedidoService {
             detalle.setPrecioUnitario(cp.getPrecioUnitario());
             detalle.setSubtotal(cp.getPrecioUnitario() * cp.getCantidad());
             pedidoDetalleRepository.save(detalle);
+
+            Inventario inventario = inventarioRepository.findByProductoId(cp.getProducto().getId())
+                    .orElseThrow(() -> new RuntimeException("Inventario no encontrado para producto ID: " + cp.getProducto().getId()));
+
+            int nuevoStock = inventario.getCantidadDisponible() - cp.getCantidad();
+            if (nuevoStock < 0) nuevoStock = 0;
+
+            inventario.setCantidadDisponible(nuevoStock);
+            inventario.setUltimaActualizacion(LocalDateTime.now());
+
+            // MARCAR COMO INACTIVO SI SE AGOTÓ
+            if (nuevoStock == 0) {
+                inventario.setEstado(false);
+            }
+
+            inventarioRepository.save(inventario);
         }
 
         Factura factura = new Factura();

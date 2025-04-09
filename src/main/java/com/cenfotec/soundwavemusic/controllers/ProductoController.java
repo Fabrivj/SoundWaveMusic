@@ -29,9 +29,9 @@ public class ProductoController {
 
     @GetMapping("/listar")
     public String listarProductos(Model model) {
-        List<Producto> productos = productoService.getAllProductos();
+        List<Producto> productos = productoService.getProductosDisponibles();
         model.addAttribute("productos", productos);
-        return "listarProductos"; // T Thymeleaf template
+        return "listarProductos";
     }
 
     // Editar Producto
@@ -78,10 +78,10 @@ public class ProductoController {
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
         try {
-            productoService.saveProducto(producto); // Guarda el producto
-            int idProducto = producto.getId(); // Obtiene el ID generado
+            Producto productoGuardado = productoService.saveProducto(producto);
+            int idProducto = productoGuardado.getId(); // ahora sí tenés el ID generado
 
-            redirectAttributes.addFlashAttribute("mensaje", "Producto guardado con éxito. Ahora registre el inventario.");
+            redirectAttributes.addFlashAttribute("mensaje", "Producto guardado con éxito.");
             redirectAttributes.addFlashAttribute("tipoAlerta", "success");
 
             return "redirect:/inventario/registrar?idProducto=" + idProducto;

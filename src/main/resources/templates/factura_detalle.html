@@ -47,5 +47,20 @@
         <a href="/productos/listar" class="btn btn-secondary">Volver al catálogo</a>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script th:inline="javascript">
+    let mensaje = /*[[${mensaje}]]*/ null;
+    let tipoAlerta = /*[[${tipoAlerta}]]*/ null;
+
+    if (mensaje && tipoAlerta) {
+        Swal.fire({
+            icon: tipoAlerta,
+            title: tipoAlerta === 'success' ? '¡Éxito!' : '¡Error!',
+            text: mensaje,
+            confirmButtonText: 'Aceptar'
+        });
+    }
+</script>
 </body>
 </html>

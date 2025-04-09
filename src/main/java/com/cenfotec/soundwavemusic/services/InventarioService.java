@@ -24,8 +24,30 @@ public class InventarioService {
     }
 
     public Inventario guardarOActualizar(Inventario inventario) {
-        inventario.setUltimaActualizacion(LocalDateTime.now());
-        return inventarioRepository.save(inventario);
+        if (inventario.getId() != 0) {
+            // Ya existe, actualizar directamente
+            Inventario existente = inventarioRepository.findById(inventario.getId())
+                    .orElseThrow(() -> new RuntimeException("Inventario no encontrado"));
+            existente.setCantidadDisponible(inventario.getCantidadDisponible());
+            existente.setEstado(inventario.isEstado());
+            existente.setUltimaActualizacion(LocalDateTime.now());
+            return inventarioRepository.save(existente);
+        } else {
+            // Buscar por producto, si ya tiene inventario
+            Optional<Inventario> existente = inventarioRepository.findByProductoId(inventario.getProducto().getId());
+
+            if (existente.isPresent()) {
+                Inventario actualizado = existente.get();
+                actualizado.setCantidadDisponible(inventario.getCantidadDisponible());
+                actualizado.setEstado(inventario.isEstado());
+                actualizado.setUltimaActualizacion(LocalDateTime.now());
+                return inventarioRepository.save(actualizado);
+            }
+
+            // Si no existe, es nuevo
+            inventario.setUltimaActualizacion(LocalDateTime.now());
+            return inventarioRepository.save(inventario);
+        }
     }
 
     public void actualizarStock(int idProducto, int cantidad) {

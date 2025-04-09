@@ -44,12 +44,12 @@ FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
 
 
 CREATE TABLE Inventarios (
-    id_inventario INT PRIMARY KEY AUTO_INCREMENT,
-    id_producto INT,
-    cantidad_disponible INT NOT NULL,
-    ultima_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
-    estado BOOLEAN,
-    FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
+id_inventario INT PRIMARY KEY AUTO_INCREMENT,
+ id_producto INT UNIQUE,
+cantidad_disponible INT NOT NULL,
+ultima_actualizacion DATETIME DEFAULT CURRENT_TIMESTAMP,
+estado BOOLEAN,
+FOREIGN KEY (id_producto) REFERENCES Productos(id_producto)
 );
 
 CREATE TABLE Pedidos (
