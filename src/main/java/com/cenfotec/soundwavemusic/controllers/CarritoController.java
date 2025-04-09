@@ -4,6 +4,7 @@ package com.cenfotec.soundwavemusic.controllers;
 import com.cenfotec.soundwavemusic.models.*;
 import com.cenfotec.soundwavemusic.services.CarritoService;
 import com.cenfotec.soundwavemusic.services.PedidoService;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.ui.Model;
 import com.cenfotec.soundwavemusic.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,28 +29,30 @@ public class CarritoController {
     private PedidoService pedidoService;
 
     @GetMapping("/ver")
-    public String verCarrito(@RequestParam("idUsuario") long idUsuario, Model model) {
-        Usuario usuario = usuarioService.obtenerPorId(idUsuario);
+    public String verCarrito(HttpSession session, Model model) {
+        Usuario usuario = (Usuario) session.getAttribute("usuario");
+        if (usuario == null) throw new RuntimeException("Sesión no iniciada");
+
         Carrito carrito = carritoService.obtenerOCrearCarritoActivo(usuario);
         List<CarritoProducto> productos = carrito.getProductos();
-
-        double total = productos.stream()
-                .mapToDouble(p -> p.getPrecioUnitario() * p.getCantidad())
-                .sum();
+        double total = productos.stream().mapToDouble(p -> p.getCantidad() * p.getPrecioUnitario()).sum();
 
         model.addAttribute("carrito", carrito);
         model.addAttribute("productos", productos);
         model.addAttribute("total", total);
+
         return "carrito_ver";
     }
 
     @PostMapping("/agregar")
-    public String agregarProductoAlCarrito(@RequestParam int idUsuario,
-                                           @RequestParam int idProducto,
+    public String agregarProductoAlCarrito(@RequestParam int idProducto,
                                            @RequestParam int cantidad,
+                                           HttpSession session,
                                            RedirectAttributes redirectAttributes) {
         try {
-            Usuario usuario = usuarioService.obtenerPorId(idUsuario);
+            Usuario usuario = (Usuario) session.getAttribute("usuario");
+            if (usuario == null) throw new RuntimeException("Sesión expirada o usuario no autenticado");
+
             Carrito carrito = carritoService.obtenerOCrearCarritoActivo(usuario);
             carritoService.agregarProducto(carrito, idProducto, cantidad);
 

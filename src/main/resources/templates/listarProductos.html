@@ -22,7 +22,7 @@
     <h2>Lista de Productos</h2>
 
     <div class="d-flex justify-content-end mb-3">
-        <a th:href="@{/carrito/ver(idUsuario=4)}" class="btn btn-outline-primary">
+        <a th:href="@{/carrito/ver}" class="btn btn-outline-primary">
             Ver Carrito 🛒
         </a>
     </div>
@@ -54,7 +54,7 @@
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                         </div>
                         <div class="modal-body">
-                            <input type="hidden" name="idUsuario" value="4"/> <!-- temporal -->
+                            <!--  <input type="hidden" name="idUsuario" value="4"/> temporal -->
                             <input type="hidden" name="idProducto" th:value="${producto.id}" />
 
                             <p>¿Cuántos deseas agregar?</p>
