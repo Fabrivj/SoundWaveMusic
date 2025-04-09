@@ -90,6 +90,7 @@ public class UsuarioController {
 
     @PostMapping("/actualizar")
     public String actualizarUsuario(@ModelAttribute Usuario usuario, Model model) {
+
         boolean actualizado = usuarioService.actualizarUsuario(usuario);
         if (actualizado) {
             model.addAttribute("mensaje", "Usuario actualizado correctamente.");

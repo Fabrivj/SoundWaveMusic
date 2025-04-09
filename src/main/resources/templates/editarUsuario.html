@@ -20,22 +20,28 @@
 
 <div th:if="${usuario}">
     <!-- Formulario de edición -->
-    <form action="/usuarios/actualizar" method="post">
-        <input type="hidden" name="idUsuario" th:value="${usuario.id}">
+    <form th:action="@{/usuarios/actualizar}" th:object="${usuario}" method="post">
+        <input type="hidden" th:field="*{id}" />
 
-        <label for="nombreUsuario">Nombre:</label>
-        <input type="text" id="nombreUsuario" name="nombreUsuario" th:value="${usuario.nombreUsuario}" required>
+        <div class="mb-3">
+            <label for="nombreUsuario">Nombre</label>
+            <input type="text" th:field="*{nombreUsuario}" class="form-control" />
+        </div>
 
-        <label for="correo">Correo:</label>
-        <input disabled type="email" id="correo" name="correo" th:value="${usuario.correo}" required>
+        <div class="mb-3">
+            <label for="correo">Correo</label>
+            <input type="email" th:field="*{correo}" class="form-control" />
+        </div>
 
-        <label for="rol">Rol:</label>
-        <select id="rol" name="rol">
-            <option value="ADMIN" th:selected="${usuario.rol == 'ADMIN'}">Admin</option>
-            <option value="USER" th:selected="${usuario.rol == 'USER'}">Usuario</option>
-        </select>
+        <div class="mb-3">
+            <label for="rol">Rol</label>
+            <select th:field="*{rol}" class="form-select">
+                <option value="USER">USER</option>
+                <option value="ADMIN">ADMIN</option>
+            </select>
+        </div>
 
-        <button type="submit">Guardar cambios</button>
+        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
     </form>
 
     <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">

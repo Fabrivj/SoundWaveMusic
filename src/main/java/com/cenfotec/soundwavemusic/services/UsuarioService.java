@@ -1,6 +1,8 @@
 package com.cenfotec.soundwavemusic.services;
 import com.cenfotec.soundwavemusic.models.Usuario;
+import com.cenfotec.soundwavemusic.repos.CarritoRepository;
 import com.cenfotec.soundwavemusic.repos.UsuarioRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -13,6 +15,9 @@ public class UsuarioService {
 
     @Autowired
     private UsuarioRepository usuarioRepository;
+
+    @Autowired
+    private CarritoRepository carritoRepository;
 
     public Usuario obtenerPorId(long id) {
         return usuarioRepository.findById(id)
@@ -66,8 +71,10 @@ public class UsuarioService {
         return false;
     }
 
+    @Transactional
     public boolean eliminarUsuario(long idUsuario) {
         if (usuarioRepository.existsById(idUsuario)) {
+            carritoRepository.deleteAllByUsuarioId(idUsuario);
             usuarioRepository.deleteById(idUsuario);
             return true;
         }
