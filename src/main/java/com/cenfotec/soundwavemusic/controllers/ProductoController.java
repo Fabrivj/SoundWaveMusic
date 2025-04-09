@@ -1,5 +1,7 @@
 package com.cenfotec.soundwavemusic.controllers;
+
 import com.cenfotec.soundwavemusic.models.Producto;
+import com.cenfotec.soundwavemusic.models.Usuario;
 import com.cenfotec.soundwavemusic.services.CategoriaService;
 import com.cenfotec.soundwavemusic.services.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,13 +30,17 @@ public class ProductoController {
     }
 
     @GetMapping("/listar")
-    public String listarProductos(Model model) {
+    public String listarProductos(Model model, @SessionAttribute(name = "usuario", required = false) Usuario usuario) {
+        if (usuario == null) {
+            return "redirect:/usuarios/login";  // Redirect to login if not logged in
+        }
+
+        model.addAttribute("rol", usuario.getRol());
         List<Producto> productos = productoService.getAllProductos();
         model.addAttribute("productos", productos);
-        return "listarProductos"; // T Thymeleaf template
+        return "listarProductos"; // Template path is templates/listarProductos.html
     }
 
-    // Editar Producto
 
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEditar(@PathVariable("id") int id, Model model) {
@@ -43,7 +49,6 @@ public class ProductoController {
         model.addAttribute("categorias", categoriaService.obtenerTodas());  // Pass the categories
         return "editarProducto"; // This should match the name of the HTML template (editarProducto.html)
     }
-
 
     @PostMapping("/actualizar")
     public String actualizarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {
@@ -59,7 +64,6 @@ public class ProductoController {
         }
     }
 
-
     @PostMapping("/eliminar")
     public String eliminarProducto(@RequestParam("id") Long id, RedirectAttributes redirectAttributes) {
         try {
@@ -73,7 +77,6 @@ public class ProductoController {
             return "redirect:/productos/listar"; // Redirect back to the listing page if error occurs
         }
     }
-
 
     @PostMapping("/guardar")
     public String guardarProducto(@ModelAttribute Producto producto, RedirectAttributes redirectAttributes) {

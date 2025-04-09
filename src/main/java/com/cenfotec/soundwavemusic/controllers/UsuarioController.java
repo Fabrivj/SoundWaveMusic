@@ -1,4 +1,5 @@
 package com.cenfotec.soundwavemusic.controllers;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.cenfotec.soundwavemusic.models.Usuario;
@@ -51,24 +52,24 @@ public class UsuarioController {
 
     // Procesar el login
     @PostMapping("/login")
-    public String autenticarUsuario(@RequestParam String correo, @RequestParam String contrasena, RedirectAttributes redirectAttributes) {
-        // Authenticate the user
+    public String autenticarUsuario(@RequestParam String correo, @RequestParam String contrasena,
+                                    RedirectAttributes redirectAttributes, HttpSession session) {
+
         Usuario usuario = usuarioService.autenticarUsuario(correo, contrasena);
 
         if (usuario != null) {
-            // Successful login
-            redirectAttributes.addFlashAttribute("mensaje", "¡Bienvenido, " + usuario.getNombreUsuario() + "!");
-            redirectAttributes.addFlashAttribute("tipoAlerta", "success");
-
-            // Redirect to product catalog
-            return "redirect:/productos/listar";  // Assuming this URL maps to your product list page
+            session.setAttribute("usuario", usuario); // ✅ Store user in session
+            redirectAttributes.addFlashAttribute("mensaje", "¡Bienvenido!");
+            return "redirect:/productos/listar";
         } else {
-            // Failed login
             redirectAttributes.addFlashAttribute("mensaje", "Credenciales incorrectas.");
             redirectAttributes.addFlashAttribute("tipoAlerta", "error");
-            return "redirect:/usuarios/login";  // Stay on the login page
+            return "redirect:/usuarios/login";
         }
     }
+
+
+
 
     @GetMapping("/editar")
     public String mostrarFormularioEdicion() {

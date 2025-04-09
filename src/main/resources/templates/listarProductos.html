@@ -61,15 +61,14 @@
                             <div class="input-group">
                                 <button class="btn btn-outline-secondary" type="button"
                                         th:attr="onclick='decrement(' + ${producto.id} + ')'">-</button>
-                                <input type="number" class="form-control" name="cantidad"
-                                       th:id="'quantityInput-' + ${producto.id}" value="1" min="1"/>
+                                <input type="number" class="form-control" value="1" name="cantidad" min="1" />
                                 <button class="btn btn-outline-secondary" type="button"
                                         th:attr="onclick='increment(' + ${producto.id} + ')'">+</button>
                             </div>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="submit" class="btn btn-primary">Agregar al Carrito</button>
+                            <button type="submit" class="btn btn-primary">Agregar</button>
                         </div>
                     </form>
                 </div>
@@ -77,24 +76,14 @@
         </div>
     </div>
 
-    <a href="/productos/registrar" class="btn btn-secondary mt-3">Registrar Nuevo Producto</a>
+    <!-- Display "Registrar Nuevo Producto" only for ADMIN role -->
+    <div th:if="${rol == 'ADMIN'}">
+        <a href="/productos/registrar" class="btn btn-secondary mt-3">Registrar Nuevo Producto</a>
+    </div>
+
 </div>
 
-<!-- Bootstrap + Funciones para + / - -->
-<script>
-    function increment(id) {
-        const input = document.getElementById(quantityInput-${id});
-        input.value = parseInt(input.value) + 1;
-    }
-
-    function decrement(id) {
-        const input = document.getElementById(quantityInput-${id});
-        if (parseInt(input.value) > 1) {
-            input.value = parseInt(input.value) - 1;
-        }
-    }
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
