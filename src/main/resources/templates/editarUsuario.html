@@ -4,51 +4,97 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Editar Usuario</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .container {
+            max-width: 600px;
+            margin-top: 50px;
+            padding: 30px;
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.05);
+        }
 
+        .form-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .btn-block-sm {
+            width: 100%;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+
+        .btn-group-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            margin-top: 30px;
+        }
+
+        form[action="/usuarios/buscar"] {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        form[action="/usuarios/buscar"] label {
+            margin: 0;
+        }
+    </style>
 </head>
 <body>
-<h1>Editar Usuario</h1>
+<div class="container">
+    <h2 class="form-title">Editar Usuario</h2>
 
-<!-- Barra de búsqueda -->
-<form action="/usuarios/buscar" method="post">
-    <label for="correoSearch">Buscar usuario por correo:</label>
-    <input type="email" id="correoSearch" name="correo" required>
-    <button type="submit">Buscar</button>
-</form>
-
-<div th:if="${usuario}">
-    <!-- Formulario de edición -->
-    <form th:action="@{/usuarios/actualizar}" th:object="${usuario}" method="post">
-        <input type="hidden" th:field="*{id}" />
-
-        <div class="mb-3">
-            <label for="nombreUsuario">Nombre</label>
-            <input type="text" th:field="*{nombreUsuario}" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label for="correo">Correo</label>
-            <input type="email" th:field="*{correo}" class="form-control" />
-        </div>
-
-        <div class="mb-3">
-            <label for="rol">Rol</label>
-            <select th:field="*{rol}" class="form-select">
-                <option value="USER">USER</option>
-                <option value="ADMIN">ADMIN</option>
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+    <!-- Search Bar -->
+    <form action="/usuarios/buscar" method="post">
+        <label for="correoSearch">Buscar usuario por correo:</label>
+        <input type="email" id="correoSearch" name="correo" class="form-control" required style="max-width: 300px;">
+        <button type="submit" class="btn btn-dark">Buscar</button>
     </form>
 
-    <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">
-        <input type="hidden" name="idUsuario" th:value="${usuario.id}">
-    </form>
+    <!-- Update Form -->
+    <div th:if="${usuario}">
+        <form th:action="@{/usuarios/actualizar}" th:object="${usuario}" method="post">
+            <input type="hidden" th:field="*{id}" />
 
-    <button id="btnEliminar" data-id="${usuario.idUsuario}" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Usuario</button>
+            <div class="mb-3">
+                <label for="nombreUsuario" class="form-label">Nombre</label>
+                <input type="text" th:field="*{nombreUsuario}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="correo" class="form-label">Correo</label>
+                <input type="email" th:field="*{correo}" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label for="rol" class="form-label">Rol</label>
+                <select th:field="*{rol}" class="form-select">
+                    <option value="USER">USER</option>
+                    <option value="ADMIN">ADMIN</option>
+                </select>
+            </div>
+
+            <div class="btn-group-center">
+                <button type="submit" class="btn btn-primary btn-lg btn-block-sm">Guardar Cambios</button>
+
+                <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">
+                    <input type="hidden" name="idUsuario" th:value="${usuario.id}">
+                </form>
+
+                <button id="btnEliminar" data-id="${usuario.idUsuario}" class="btn btn-danger btn-lg btn-block-sm"
+                        onclick="confirmarEliminacion()">Eliminar Usuario</button>
+                <a href="/productos/listar" class="btn btn-secondary btn-lg btn-block-sm">Volver</a>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script th:inline="javascript">
@@ -76,7 +122,7 @@
             confirmButtonText: "Sí, eliminar"
         }).then((result) => {
             if (result.isConfirmed) {
-                document.getElementById('eliminarForm').submit(); // Enviar el formulario si se confirma
+                document.getElementById('eliminarForm').submit();
             }
         });
     }
