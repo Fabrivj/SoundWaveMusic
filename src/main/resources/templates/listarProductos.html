@@ -16,19 +16,17 @@
             height: 100%;
         }
 
-        /* Sidebar */
         #sidebar {
             height: 100vh;
             width: 250px;
             position: fixed;
             top: 0;
             left: 0;
-            background-color: #343a40;
+            background-color: #1e1e2f;
             color: white;
             padding-top: 60px;
             z-index: 1000;
         }
-
 
         #sidebar a {
             color: white;
@@ -38,9 +36,8 @@
         }
 
         #sidebar a:hover {
-            background-color: #495057; /* Bootstrap secondary-dark */
+            background-color: #2a2a3d;
         }
-
 
         #content {
             margin-left: 250px;
@@ -52,14 +49,15 @@
 
 <!-- Sidebar -->
 <div id="sidebar">
-    <div class="px-3 mb-4"> Hola, <span th:text="${usuario.nombreUsuario}">Usuario</span></div>
+    <div class="px-3 mb-4">Hola, <span th:text="${usuario.nombreUsuario}">Usuario</span></div>
     <div th:if="${usuario != null}">
         <div th:if="${rol == 'ADMIN'}">
-            <a href="/productos/listar"> Gestionar Productos</a>
+            <a href="/productos/listar">Gestionar Productos</a>
             <a href="/usuarios/editar">Editar Usuarios</a>
             <a href="/inventario/lista">Gestionar Inventario</a>
         </div>
         <a href="/usuarios/logout">Cerrar Sesión</a>
+
     </div>
 </div>
 
@@ -84,10 +82,28 @@
                         <p class="card-text" th:text="${producto.descripcion}"></p>
                         <p class="card-text"><strong>Precio: </strong>₡<span th:text="${producto.precio}"></span></p>
 
-                        <button class="btn btn-success" data-bs-toggle="modal"
-                                th:attr="data-bs-target='#addToCartModal-' + ${producto.id}">
-                            Agregar al Carrito
-                        </button>
+                        <!-- Buttons based on role -->
+                        <div th:if="${rol == 'ADMIN'}" class="d-flex gap-2">
+                            <a th:href="@{'/productos/editar/' + ${producto.id}}" class="btn btn-warning">Editar</a>
+
+                            <button type="button"
+                                    class="btn btn-danger"
+                                    th:attr="data-id=${producto.id}"
+                                    onclick="confirmarEliminacion(this)">
+                                Eliminar
+                            </button>
+
+                            <form th:id="'deleteForm-' + ${producto.id}" th:action="@{/productos/eliminar}" method="post" style="display:none;">
+                                <input type="hidden" name="id" th:value="${producto.id}" />
+                            </form>
+                        </div>
+
+                        <div th:if="${rol != 'ADMIN'}">
+                            <button class="btn btn-success" data-bs-toggle="modal"
+                                    th:attr="data-bs-target='#addToCartModal-' + ${producto.id}">
+                                Agregar al Carrito
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -120,13 +136,14 @@
             </div>
         </div>
 
-        <!-- Display "Registrar Nuevo Producto" only for ADMIN role -->
+        <!-- Admin-only: Add New Product -->
         <div th:if="${rol == 'ADMIN'}">
             <a href="/productos/registrar" class="btn btn-secondary mt-3">Registrar Nuevo Producto</a>
         </div>
     </div>
 </div>
 
+<!-- Scripts -->
 <script>
     function increment(id) {
         const input = document.getElementById(`quantityInput-${id}`);
@@ -139,10 +156,28 @@
             input.value = parseInt(input.value) - 1;
         }
     }
+
+    function confirmarEliminacion(button) {
+        const id = button.getAttribute("data-id");
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                document.getElementById(`deleteForm-${id}`).submit();
+            }
+        });
+    }
 </script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 <script th:inline="javascript">
     /*<![CDATA[*/
     let mensaje = /*[[${mensaje}]]*/ null;
