@@ -32,14 +32,16 @@ public class ProductoController {
     @GetMapping("/listar")
     public String listarProductos(Model model, @SessionAttribute(name = "usuario", required = false) Usuario usuario) {
         if (usuario == null) {
-            return "redirect:/usuarios/login";  // Redirect to login if not logged in
+            return "redirect:/usuarios/login";
         }
 
+        model.addAttribute("usuario", usuario); // 👈 ADD THIS LINE
         model.addAttribute("rol", usuario.getRol());
         List<Producto> productos = productoService.getProductosDisponibles();
         model.addAttribute("productos", productos);
-        return "listarProductos"; // Template path is templates/listarProductos.html
+        return "listarProductos";
     }
+
 
 
     @GetMapping("/editar/{id}")
