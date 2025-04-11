@@ -54,4 +54,11 @@ public class ProductoService {
         inventarioRepository.save(inventario);
     }
 
+    public List<Producto> buscarPorNombreOCategoria(String query) {
+        return productoRepository.buscarPorNombreOCategoria(query);
+    }
+
+
+
+
 }

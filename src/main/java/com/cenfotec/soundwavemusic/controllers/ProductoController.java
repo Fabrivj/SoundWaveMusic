@@ -97,4 +97,20 @@ public class ProductoController {
             return "redirect:/productos/registrar";
         }
     }
+    @GetMapping("/buscar")
+    public String buscarProductos(@RequestParam("query") String query, Model model, @SessionAttribute(name = "usuario", required = false) Usuario usuario, RedirectAttributes redirectAttributes) {
+        List<Producto> resultados = productoService.buscarPorNombreOCategoria(query);
+
+        if (resultados.isEmpty()) {
+            redirectAttributes.addFlashAttribute("mensaje", "No se encontraron productos con ese nombre.");
+            redirectAttributes.addFlashAttribute("tipoAlerta", "error");
+            return "redirect:/productos/listar";
+        }
+
+        model.addAttribute("productos", resultados);
+        model.addAttribute("rol", usuario.getRol());
+        model.addAttribute("usuario", usuario);
+        return "listarProductos";
+    }
+
 }
