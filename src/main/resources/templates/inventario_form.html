@@ -16,7 +16,12 @@
 
         <div class="mb-3">
             <label th:for="*{cantidadDisponible}">Cantidad Disponible</label>
-            <input type="number" class="form-control" th:field="*{cantidadDisponible}" required />
+            <input type="number"
+                   class="form-control"
+                   th:value="${inventario.cantidadDisponible != null and inventario.cantidadDisponible > 0 ? inventario.cantidadDisponible : 1}"
+                   min="1"
+                   name="cantidadDisponible"
+                   required />
         </div>
 
         <div class="form-check mb-3">

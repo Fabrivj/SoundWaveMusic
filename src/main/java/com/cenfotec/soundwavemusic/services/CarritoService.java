@@ -43,7 +43,7 @@ public class CarritoService {
                 .orElseThrow(() -> new RuntimeException("No hay inventario para este producto"));
 
         if (inventario.getCantidadDisponible() < cantidad) {
-            throw new RuntimeException("Stock insuficiente");
+            throw new RuntimeException("Producto no disponible");
         }
 
         CarritoProducto cp = new CarritoProducto();

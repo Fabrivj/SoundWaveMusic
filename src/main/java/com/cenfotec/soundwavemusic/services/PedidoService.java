@@ -55,7 +55,7 @@ public class PedidoService {
         pedido.setUsuario(usuario);
         pedido.setFechaPedido(LocalDateTime.now());
         pedido.setEstado(true);
-        pedido.setDireccionEnvio(direccionEnvio); // ✅ se usa la dirección enviada por el usuario
+        pedido.setDireccionEnvio(direccionEnvio); // se usa la dirección enviada por el usuario
         pedido.setTotal(total);
         pedidoRepository.save(pedido);
 

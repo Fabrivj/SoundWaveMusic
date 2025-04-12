@@ -35,7 +35,7 @@ public class ProductoController {
             return "redirect:/usuarios/login";
         }
 
-        model.addAttribute("usuario", usuario); // 👈 ADD THIS LINE
+        model.addAttribute("usuario", usuario);
         model.addAttribute("rol", usuario.getRol());
         List<Producto> productos = productoService.getProductosDisponibles();
         model.addAttribute("productos", productos);

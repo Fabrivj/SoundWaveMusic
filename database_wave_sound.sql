@@ -95,3 +95,20 @@ INSERT INTO categorias (id_categoria, nombre_categoria) VALUES
 (8, 'Grabación y Estudio'),
 (9, 'Micrófonos'),
 (10, 'DJ y Producción Musical');
+
+-- Desactiva temporalmente claves foráneas
+SET FOREIGN_KEY_CHECKS = 0;
+
+-- Borra datos de todas las tablas
+TRUNCATE TABLE facturas;
+TRUNCATE TABLE pedido_detalle;
+TRUNCATE TABLE pedidos;
+TRUNCATE TABLE carrito_productos;
+TRUNCATE TABLE carritos;
+TRUNCATE TABLE inventarios;
+TRUNCATE TABLE productos;
+TRUNCATE TABLE categorias;
+TRUNCATE TABLE usuarios;
+
+-- Reactiva claves foráneas
+SET FOREIGN_KEY_CHECKS = 1;

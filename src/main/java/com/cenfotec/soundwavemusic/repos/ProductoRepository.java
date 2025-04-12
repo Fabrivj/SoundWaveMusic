@@ -11,7 +11,15 @@ import java.util.List;
 @Repository
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
 
-    @Query("SELECT p FROM Producto p WHERE LOWER(p.nombre_producto) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(p.categoria.nombre) LIKE LOWER(CONCAT('%', :query, '%'))")
+    @Query("""
+    SELECT p FROM Producto p 
+    JOIN Inventario i ON i.producto.id = p.id 
+    WHERE i.estado = true 
+    AND (
+        LOWER(p.nombre_producto) LIKE LOWER(CONCAT('%', :query, '%')) 
+        OR LOWER(p.categoria.nombre) LIKE LOWER(CONCAT('%', :query, '%'))
+    )
+""")
     List<Producto> buscarPorNombreOCategoria(@Param("query") String query);
 
 }
