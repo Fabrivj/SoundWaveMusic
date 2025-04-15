@@ -1,5 +1,6 @@
+<!-- EDITAR USUARIO -->
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,13 +19,34 @@
 
         .form-title {
             text-align: center;
+            font-weight: 700;
+            font-size: 2.5rem;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
             margin-bottom: 30px;
         }
 
-        .btn-block-sm {
-            width: 100%;
-            max-width: 300px;
-            margin: 0 auto;
+        .btn {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+
+        .btn-primary {
+            background-color: #1e3a8a;
+            border-color: #1e3a8a;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            border-color: #6c757d;
+        }
+
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+
+        .btn:hover {
+            opacity: 0.9;
         }
 
         .btn-group-center {
@@ -37,29 +59,23 @@
 
         form[action="/usuarios/buscar"] {
             display: flex;
-            flex-direction: row;
             align-items: center;
             gap: 10px;
             margin-bottom: 30px;
-        }
-
-        form[action="/usuarios/buscar"] label {
-            margin: 0;
         }
     </style>
 </head>
 <body>
 <div class="container">
-    <h2 class="form-title" style="font-weight: 700; font-size: 2.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);"> Editar Usuario</h2>
+    <h2 class="form-title">Editar Usuario</h2>
 
     <!-- Search Bar -->
     <form action="/usuarios/buscar" method="post">
         <label for="correoSearch">Buscar usuario por correo:</label>
         <input type="email" id="correoSearch" name="correo" class="form-control" required style="max-width: 300px;">
-        <button type="submit" class="btn btn-dark">Buscar</button>
+        <button type="submit" class="btn btn-primary mt-2">Buscar</button>
     </form>
 
-    <!-- Update Form -->
     <div th:if="${usuario}">
         <form th:action="@{/usuarios/actualizar}" th:object="${usuario}" method="post">
             <input type="hidden" th:field="*{id}" />
@@ -83,22 +99,21 @@
             </div>
 
             <div class="btn-group-center">
-                <button type="submit" class="btn btn-primary btn-lg btn-block-sm">Guardar Cambios</button>
+                <button type="submit" class="btn btn-primary">Guardar Cambios</button>
 
                 <form id="eliminarForm" action="/usuarios/eliminar" method="post" style="display: none;">
                     <input type="hidden" name="idUsuario" th:value="${usuario.id}">
                 </form>
 
-                <button id="btnEliminar" data-id="${usuario.idUsuario}" class="btn btn-danger btn-lg btn-block-sm"
-                        onclick="confirmarEliminacion()">Eliminar Usuario</button>
-                <a href="/productos/listar" class="btn btn-secondary btn-lg btn-block-sm">Volver</a>
+                <button type="button" class="btn btn-danger" onclick="confirmarEliminacion()">Eliminar Usuario</button>
+                <a href="/productos/listar" class="btn btn-secondary">Volver</a>
             </div>
         </form>
     </div>
 </div>
 
+<!-- Scripts -->
 <script th:inline="javascript">
-    /*<![CDATA[*/
     var mensaje = /*[[${mensaje}]]*/ 'null';
     var tipoAlerta = /*[[${tipoAlerta}]]*/ 'null';
 
@@ -126,7 +141,7 @@
             }
         });
     }
-    /*]]>*/
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
