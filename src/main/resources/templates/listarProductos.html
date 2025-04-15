@@ -161,19 +161,20 @@
         </div>
 
         <!-- USER view header -->
-        <div class="d-flex justify-content-end mb-3" th:if="${rol != 'ADMIN'}">
-            <h2 class="me-auto" style="font-weight: 700; font-size: 2.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">Lista de Productos</h2>
-            <div class="d-flex gap-2">
-                <form class="d-flex" th:action="@{/productos/buscar}" method="get">
-                    <input type="text" name="query" class="form-control me-2" placeholder="Buscar por nombre o categoría"
-                           style="width: 400px;" />
+        <div class="d-flex justify-content-between align-items-center mb-4" th:if="${rol != 'ADMIN'}">
+            <h2 class="me-auto" style="font-weight: 700; font-size: 2.5rem; text-shadow: 1px 1px 4px rgba(0,0,0,0.3);">
+                Lista de Productos
+            </h2>
+            <div class="d-flex align-items-center" style="gap: 10px;">
+                <form class="d-flex align-items-center" th:action="@{/productos/buscar}" method="get" style="gap: 10px;">
+                    <input type="text" name="query" class="form-control" placeholder="Buscar por nombre o categoría" style="width: 300px;" />
                     <button type="submit" class="btn btn-primary">Buscar</button>
                 </form>
-                <a th:href="@{/carrito/ver}" class="btn btn-outline-primary">
-                    Ver Carrito 🛒
-                </a>
+                <a th:href="@{/carrito/ver}" class="btn btn-outline-primary">Ver Carrito 🛒</a>
             </div>
         </div>
+
+
     </div>
 
     <div id="carouselExampleCaptions" class="carousel slide mb-5" data-bs-ride="carousel">
@@ -232,11 +233,12 @@
                         </div>
 
                         <div th:if="${rol != 'ADMIN'}">
-                            <button class="btn btn-success" data-bs-toggle="modal"
+                            <button class="btn btn-outline-primary" data-bs-toggle="modal"
                                     th:attr="data-bs-target='#addToCartModal-' + ${producto.id}">
                                 Agregar al Carrito
                             </button>
                         </div>
+
                     </div>
                 </div>
 
